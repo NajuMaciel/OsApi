@@ -4,29 +4,38 @@
  */
 package br.naju.eti.OSApiApplication.domain.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  *
  * @author Aluno
  */
+@Entity
 public class Cliente {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nome;
     private String email;
+
+    @Column(name = "telefone")
     private String fone;
 
     public Cliente() {
     }
 
-    
-    
     public Cliente(long id, String nome, String email, String fone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.fone = fone;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -81,5 +90,3 @@ public class Cliente {
         return this.id == other.id;
     }
 }
-
-

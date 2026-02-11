@@ -1,34 +1,63 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.naju.eti.OSApiApplication.api.controller;
 
 import br.naju.eti.OSApiApplication.domain.model.Cliente;
-import java.util.ArrayList;
+import br.naju.eti.OSApiApplication.domain.ClienteRepository;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author Aluno
  */
-
 @RestController
 public class ClienteController {
+
+    @Autowired
+    private ClienteRepository clienteRepository;
     
-    List<Cliente> listaClientes;
-    
-    @GetMapping ("/clientes")
-    public List<Cliente>  listas() {
+    @GetMapping("/clientes")
+    public List<Cliente> listas(){
+        return clienteRepository.findAll();
+    }
+
+    @GetMapping("/clientes/{ClienteID}")
+    public ResponseEntity<Cliente> buscar(@PathVariable Long ClienteID){
         
-        listaClientes = new ArrayList<Cliente>();
-        listaClientes.add (new Cliente (1, "Kge", "kge.teste.com", "11-99999-9999"));
-        listaClientes.add (new Cliente (2, "Naju", "naju.teste.com", "12-44444-4444"));
-        listaClientes.add (new Cliente (2, "Naju", "naju.teste.com", "12-44444-4444"));
+        Optional<Cliente> cliente = clienteRepository.findById(ClienteID);
         
-        return listaClientes;
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
+    @PostMapping ("/clientes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cliente adicionar (@RequestBody Cliente cliente) {
+        
+        return clienteRepository.save(cliente);
+    }
+    
+    @PutMapping ("/clientes/{clienteID}")
+    public ResponseEntity<Cliente> atualizar (@PathVariable Long clienteID, @RequestBody Cliente cliente) {
+        
+        if (!clienteRepository.existsById(clienteID)){
+            return ResponseEntity.notFound().build();
+        }
+        
+        cliente.setId(clienteID);
+        cliente = clienteRepository.save(cliente);
+        return ResponseEntity.ok(cliente);
+    }
 }
