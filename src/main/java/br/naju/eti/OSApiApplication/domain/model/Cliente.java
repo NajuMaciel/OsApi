@@ -4,6 +4,7 @@
  */
 package br.naju.eti.OSApiApplication.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,20 +23,24 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(name = "Cliente ID", example = "1")  //descreve o que esse atributo faz
     private long id;
     
     @NotBlank
     @Size(max = 60)
+    @Schema(name = "nome", example = "Ana Júlia")
     private String nome;
     
     @NotBlank
     @Email
     @Size(max = 255)
+    @Schema(name = "email", example = "ana@email")
     private String email;
     
     @NotBlank
     @Size(max = 20)
     @Column(name = "telefone")
+    @Schema(name = "telefone", example = "1299124-4897")
     private String fone;
     
     
